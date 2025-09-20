@@ -360,6 +360,41 @@ aiRouter.get('/health', async (req, res) => {
   }
 });
 
+// AI Service Test Endpoint (no auth required for testing)
+aiRouter.post('/test/risk/predict', async (req, res) => {
+  try {
+    const testData = {
+      route: {
+        start: { lat: 28.6139, lng: 77.2090 },
+        end: { lat: 28.5355, lng: 77.3910 }
+      },
+      time_of_day: "evening"
+    };
+
+    // Call AI service directly
+    const aiResponse = await axios.post(
+      `${AI_SERVICE_URL}/api/risk/predict`,
+      testData,
+      { timeout: AI_TIMEOUT }
+    );
+
+    res.json({
+      success: true,
+      test_mode: true,
+      ai_service_response: aiResponse.data,
+      test_data_used: testData
+    });
+  } catch (error: any) {
+    console.error('AI service test error:', error.message);
+    res.status(503).json({
+      success: false,
+      error: 'AI service test failed',
+      details: error.message,
+      ai_service_url: AI_SERVICE_URL
+    });
+  }
+});
+
 // AI Service Health Check (no auth required for testing)
 aiRouter.get('/health', async (req, res) => {
   try {
