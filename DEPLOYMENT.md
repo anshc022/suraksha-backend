@@ -76,7 +76,7 @@ git push -u origin main
 PORT=4000
 JWT_SECRET=super_secure_random_string_32_chars_min
 MONGODB_URI=mongodb+srv://suraksha:yourpassword@cluster0.xxxxx.mongodb.net/suraksha?retryWrites=true&w=majority
-AI_SERVICE_URL=https://your-ai-service.onrender.com
+AI_SERVICE_URL=https://suraksha-ai-service.onrender.com
 NODE_ENV=production
 ```
 
