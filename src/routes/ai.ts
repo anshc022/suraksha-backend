@@ -6,7 +6,7 @@ import { authMiddleware, AuthRequest } from '../middleware/auth';
 const aiRouter = Router();
 
 // AI Service Configuration
-const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:5000';
+const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'https://suraksha-ai-service.onrender.com';
 const AI_TIMEOUT = 10000; // 10 seconds
 
 // Request schemas
@@ -356,6 +356,27 @@ aiRouter.get('/health', async (req, res) => {
       error: 'AI service health check failed',
       status: 'unavailable',
       backend_timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// AI Service Health Check (no auth required for testing)
+aiRouter.get('/health', async (req, res) => {
+  try {
+    const aiResponse = await axios.get(`${AI_SERVICE_URL}/health`, { timeout: AI_TIMEOUT });
+    res.json({
+      success: true,
+      ai_service_status: 'connected',
+      ai_service_url: AI_SERVICE_URL,
+      ai_response: aiResponse.data
+    });
+  } catch (error: any) {
+    console.error('AI service connection error:', error.message);
+    res.status(503).json({
+      success: false,
+      error: 'AI service unavailable',
+      ai_service_url: AI_SERVICE_URL,
+      details: error.message
     });
   }
 });
